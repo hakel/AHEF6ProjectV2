@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="activehoursModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="customer_id" />
+          </Key>
+          <Property Name="customer_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="100" />
+          <Property Name="last_name" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="customer_accounts">
+          <Key>
+            <PropertyRef Name="customer_id" />
+            <PropertyRef Name="routing_number" />
+            <PropertyRef Name="account_number" />
+          </Key>
+          <Property Name="customer_id" Type="int" Nullable="false" />
+          <Property Name="routing_number" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="account_number" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_customer_accounts_customer">
+          <End Role="customer" Type="Self.customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="customer_accounts" Type="Self.customer_accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="customer_id" />
+            </Principal>
+            <Dependent Role="customer_accounts">
+              <PropertyRef Name="customer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="activehoursModelStoreContainer">
+          <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="customer_accounts" EntityType="Self.customer_accounts" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_customer_accounts_customer" Association="Self.FK_customer_accounts_customer">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="customer_accounts" EntitySet="customer_accounts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="activehoursModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="customer_id" />
+          </Key>
+          <Property Name="customer_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="first_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="last_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_accounts" Relationship="activehoursModel.FK_customer_accounts_customer" FromRole="customer" ToRole="customer_accounts" />
+        </EntityType>
+        <EntityType Name="customer_accounts">
+          <Key>
+            <PropertyRef Name="customer_id" />
+            <PropertyRef Name="routing_number" />
+            <PropertyRef Name="account_number" />
+          </Key>
+          <Property Name="customer_id" Type="Int32" Nullable="false" />
+          <Property Name="routing_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="account_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="customer" Relationship="activehoursModel.FK_customer_accounts_customer" FromRole="customer_accounts" ToRole="customer" />
+        </EntityType>
+        <EntityContainer Name="activehoursEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="customers" EntityType="Self.customer" />
+          <EntitySet Name="customer_accounts" EntityType="Self.customer_accounts" />
+          <AssociationSet Name="FK_customer_accounts_customer" Association="activehoursModel.FK_customer_accounts_customer">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="customer_accounts" EntitySet="customer_accounts" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_customer_accounts_customer">
+          <End Type="activehoursModel.customer" Role="customer" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="activehoursModel.customer_accounts" Role="customer_accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="customer_id" />
+            </Principal>
+            <Dependent Role="customer_accounts">
+              <PropertyRef Name="customer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="activehoursModelStoreContainer" CdmEntityContainer="activehoursEntities">
+          <EntitySetMapping Name="customers">
+            <EntityTypeMapping TypeName="activehoursModel.customer">
+              <MappingFragment StoreEntitySet="customer">
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer_accounts">
+            <EntityTypeMapping TypeName="activehoursModel.customer_accounts">
+              <MappingFragment StoreEntitySet="customer_accounts">
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="routing_number" ColumnName="routing_number" />
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
